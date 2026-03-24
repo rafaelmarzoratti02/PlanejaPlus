@@ -1,0 +1,6 @@
+@Planeja__HostAddress = http://localhost:5103
+
+GET {{Planeja__HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
