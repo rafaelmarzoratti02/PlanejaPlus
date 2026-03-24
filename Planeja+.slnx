@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="Planeja+.csproj" />
+  <Project Path="../Planeja+.Application/Planeja+.Application.csproj" />
+  <Project Path="Planeja+.API.csproj" />
+  <Project Path="Planeja+.Domain/Planeja+.Domain.csproj" />
+  <Project Path="Planeja+.Infrastructure/Planeja+.Infrastructure.csproj" />
 </Solution>

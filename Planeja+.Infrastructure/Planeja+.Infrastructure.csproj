@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Planeja_.Infrastructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Planeja+.Application\Planeja+.Application.csproj" />
+    <ProjectReference Include="..\Planeja+.Domain\Planeja+.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Planeja_</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Planeja+.Application\Planeja+.Application.csproj" />
+    <ProjectReference Include="Planeja+.Infrastructure\Planeja+.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Planeja+.Domain\**\*.cs" />
+    <Compile Remove="Planeja+.Infrastructure\**\*.cs" />
+    <EmbeddedResource Remove="Planeja+.Domain\**\*" />
+    <EmbeddedResource Remove="Planeja+.Infrastructure\**\*" />
+    <None Remove="Planeja+.Domain\**\*" />
+    <None Remove="Planeja+.Infrastructure\**\*" />
+  </ItemGroup>
+
+</Project>
