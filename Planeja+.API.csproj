@@ -16,17 +16,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Planeja+.Application\Planeja+.Application.csproj" />
+    <ProjectReference Include="Planeja+.Application\Planeja+.Application.csproj" />
     <ProjectReference Include="Planeja+.Infrastructure\Planeja+.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Planeja+.Domain\**\*.cs" />
-    <Compile Remove="Planeja+.Infrastructure\**\*.cs" />
-    <EmbeddedResource Remove="Planeja+.Domain\**\*" />
-    <EmbeddedResource Remove="Planeja+.Infrastructure\**\*" />
-    <None Remove="Planeja+.Domain\**\*" />
-    <None Remove="Planeja+.Infrastructure\**\*" />
+    <Compile Remove="Planeja+.Domain\**" />
+    <Compile Remove="Planeja+.Application\**" />
+    <Compile Remove="Planeja+.Infrastructure\**" />
+    <EmbeddedResource Remove="Planeja+.Domain\**" />
+    <EmbeddedResource Remove="Planeja+.Application\**" />
+    <EmbeddedResource Remove="Planeja+.Infrastructure\**" />
+    <None Remove="Planeja+.Domain\**" />
+    <None Remove="Planeja+.Application\**" />
+    <None Remove="Planeja+.Infrastructure\**" />
   </ItemGroup>
 
 </Project>
