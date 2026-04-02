@@ -1,6 +1,6 @@
 namespace Planeja_.Domain.Enums;
 
-public enum FinancialGoalStatusEnum
+public enum FinancialGoalStatus
 {
     Active = 1,
     Completed = 2,

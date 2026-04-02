@@ -10,7 +10,7 @@ public class FinancialGoal
     public Guid Id { get; private set; }
     public string Name { get; private set; } = default!;
     public decimal TargetAmount { get; private set; }
-    public FinancialGoalStatusEnum Status { get; private set; }
+    public FinancialGoalStatus Status { get; private set; }
     public DateTime Deadline { get; private set; }
     public string? Description { get; private set; }
     public bool IsDeleted { get; private set; }
@@ -22,7 +22,7 @@ public class FinancialGoal
 
     public decimal CurrentAmount => _transactions
         .Where(t => !t.IsDeleted)
-        .Sum(t => t.Type == TransactionTypeEnum.Deposit ? t.Amount : -t.Amount);
+        .Sum(t => t.Type == TransactionType.Deposit ? t.Amount : -t.Amount);
 
     private FinancialGoal() { }
 
@@ -30,11 +30,12 @@ public class FinancialGoal
     {
         ValidateName(name);
         ValidateTargetAmount(targetAmount);
+        ValidateDeadline(deadline);
 
         Id = Guid.NewGuid();
         Name = name;
         TargetAmount = targetAmount;
-        Status = FinancialGoalStatusEnum.Active;
+        Status = FinancialGoalStatus.Active;
         Deadline = deadline;
         Description = description;
         IsDeleted = false;
@@ -55,11 +56,11 @@ public class FinancialGoal
         UpdatedAt = DateTime.UtcNow;
     }
 
-    public FinancialGoalTransaction AddTransaction(decimal amount, TransactionTypeEnum type, DateTime date, string? description = null)
+    public FinancialGoalTransaction AddTransaction(decimal amount, TransactionType type, DateTime date, string? description = null)
     {
         EnsureNotDeleted();
 
-        if (Status != FinancialGoalStatusEnum.Active)
+        if (Status != FinancialGoalStatus.Active)
             throw new DomainException("Cannot add transactions to a non-active goal.");
 
         var transaction = new FinancialGoalTransaction(Id, amount, type, date, description);
@@ -81,10 +82,10 @@ public class FinancialGoal
     {
         EnsureNotDeleted();
 
-        if (Status != FinancialGoalStatusEnum.Active)
+        if (Status != FinancialGoalStatus.Active)
             throw new DomainException("Only active goals can be completed.");
 
-        Status = FinancialGoalStatusEnum.Completed;
+        Status = FinancialGoalStatus.Completed;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -92,10 +93,10 @@ public class FinancialGoal
     {
         EnsureNotDeleted();
 
-        if (Status != FinancialGoalStatusEnum.Active)
+        if (Status != FinancialGoalStatus.Active)
             throw new DomainException("Only active goals can be cancelled.");
 
-        Status = FinancialGoalStatusEnum.Cancelled;
+        Status = FinancialGoalStatus.Cancelled;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -130,5 +131,11 @@ public class FinancialGoal
 
         if (decimal.Round(targetAmount, 2) != targetAmount)
             throw new DomainException("Target amount must have at most 2 decimal places.");
+    }
+
+    private static void ValidateDeadline(DateTime deadline)
+    {
+        if (deadline.Date < DateTime.UtcNow.Date)
+            throw new DomainException("Deadline cannot be in the past.");
     }
 }

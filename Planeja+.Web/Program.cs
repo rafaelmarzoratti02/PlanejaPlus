@@ -38,7 +38,7 @@ try
 
     var app = builder.Build();
 
-    app.UseMiddleware<DomainExceptionMiddleware>();
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseSerilogRequestLogging();
 
     if (app.Environment.IsDevelopment())

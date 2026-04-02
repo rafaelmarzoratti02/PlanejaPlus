@@ -1,6 +1,6 @@
 namespace Planeja_.Domain.Enums;
 
-public enum TransactionTypeEnum
+public enum TransactionType
 {
     Deposit = 1,
     Withdraw = 2

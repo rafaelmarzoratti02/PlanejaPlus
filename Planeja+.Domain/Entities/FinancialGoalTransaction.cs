@@ -8,7 +8,7 @@ public class FinancialGoalTransaction
     public Guid Id { get; private set; }
     public Guid FinancialGoalId { get; private set; }
     public decimal Amount { get; private set; }
-    public TransactionTypeEnum Type { get; private set; }
+    public TransactionType Type { get; private set; }
     public DateTime Date { get; private set; }
     public string? Description { get; private set; }
     public bool IsDeleted { get; private set; }
@@ -20,7 +20,7 @@ public class FinancialGoalTransaction
     public FinancialGoalTransaction(
         Guid financialGoalId,
         decimal amount,
-        TransactionTypeEnum type,
+        TransactionType type,
         DateTime date,
         string? description = null)
     {
@@ -62,9 +62,9 @@ public class FinancialGoalTransaction
             throw new DomainException("Transaction date cannot be in the future.");
     }
 
-    private static void ValidateType(TransactionTypeEnum type)
+    private static void ValidateType(TransactionType type)
     {
-        if (!Enum.IsDefined(typeof(TransactionTypeEnum), type))
+        if (!Enum.IsDefined(typeof(TransactionType), type))
             throw new DomainException("Invalid transaction type.");
     }
 }
