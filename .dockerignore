@@ -1,0 +1,15 @@
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/.cursor
+**/bin
+**/obj
+**/node_modules
+**/*.user
+**/*.suo
+**/Thumbs.db
+**/.DS_Store
+**/docker-compose*.yml
+**/.dockerignore
+**/Dockerfile
