@@ -5,12 +5,46 @@ import type {
   UpdateFinancialGoalRequest,
   AddTransactionRequest,
   TransactionResponse,
+  RegisterRequest,
+  LoginRequest,
+  AuthResponse,
 } from '../types/goal';
 
-const api = axios.create({
+export const TOKEN_KEY = 'planeja_token';
+
+export const api = axios.create({
   baseURL: '/api',
   headers: { 'Content-Type': 'application/json' },
 });
+
+// Attach the JWT on every request if present
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Redirect to /login on 401 so stale tokens are handled automatically
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem(TOKEN_KEY);
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const authApi = {
+  register: (data: RegisterRequest) =>
+    api.post<AuthResponse>('/auth/register', data).then((r) => r.data),
+
+  login: (data: LoginRequest) =>
+    api.post<AuthResponse>('/auth/login', data).then((r) => r.data),
+};
 
 export const goalsApi = {
   getAll: () =>
