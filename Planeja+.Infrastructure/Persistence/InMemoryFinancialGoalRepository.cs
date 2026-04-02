@@ -14,10 +14,10 @@ public sealed class InMemoryFinancialGoalRepository : IFinancialGoalRepository
         return Task.FromResult(goal);
     }
 
-    public Task<IEnumerable<FinancialGoal>> GetAllAsync(CancellationToken cancellationToken = default)
+    public Task<IEnumerable<FinancialGoal>> GetAllByUserAsync(Guid userId, CancellationToken cancellationToken = default)
     {
         IEnumerable<FinancialGoal> goals = Store.Values
-            .Where(g => !g.IsDeleted)
+            .Where(g => !g.IsDeleted && g.UserId == userId)
             .OrderByDescending(g => g.CreatedAt);
 
         return Task.FromResult(goals);

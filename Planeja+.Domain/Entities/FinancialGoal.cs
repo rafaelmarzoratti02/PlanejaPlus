@@ -8,6 +8,7 @@ public class FinancialGoal
     private readonly List<FinancialGoalTransaction> _transactions = new();
 
     public Guid Id { get; private set; }
+    public Guid UserId { get; private set; }
     public string Name { get; private set; } = default!;
     public decimal TargetAmount { get; private set; }
     public FinancialGoalStatus Status { get; private set; }
@@ -26,13 +27,15 @@ public class FinancialGoal
 
     private FinancialGoal() { }
 
-    public FinancialGoal(string name, decimal targetAmount, DateTime deadline, string? description = null)
+    public FinancialGoal(Guid userId, string name, decimal targetAmount, DateTime deadline, string? description = null)
     {
+        ValidateUserId(userId);
         ValidateName(name);
         ValidateTargetAmount(targetAmount);
         ValidateDeadline(deadline);
 
         Id = Guid.NewGuid();
+        UserId = userId;
         Name = name;
         TargetAmount = targetAmount;
         Status = FinancialGoalStatus.Active;
@@ -113,6 +116,12 @@ public class FinancialGoal
     {
         if (IsDeleted)
             throw new DomainException("Cannot modify a deleted goal.");
+    }
+
+    private static void ValidateUserId(Guid userId)
+    {
+        if (userId == Guid.Empty)
+            throw new DomainException("User id is required.");
     }
 
     private static void ValidateName(string name)

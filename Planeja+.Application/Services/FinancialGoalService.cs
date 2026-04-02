@@ -1,3 +1,4 @@
+using Planeja_.Application.Abstractions;
 using Planeja_.Application.DTOs.FinancialGoals;
 using Planeja_.Application.DTOs.Transactions;
 using Planeja_.Application.Exceptions;
@@ -11,27 +12,33 @@ namespace Planeja_.Application.Services;
 public sealed class FinancialGoalService : IFinancialGoalService
 {
     private readonly IFinancialGoalRepository _repository;
+    private readonly ICurrentUserService _currentUser;
 
-    public FinancialGoalService(IFinancialGoalRepository repository)
+    public FinancialGoalService(IFinancialGoalRepository repository, ICurrentUserService currentUser)
     {
         _repository = repository;
+        _currentUser = currentUser;
     }
 
     public async Task<FinancialGoalResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var goal = await _repository.GetByIdAsync(id, cancellationToken);
-        return goal is null || goal.IsDeleted ? null : MapToResponse(goal);
+        if (goal is null || goal.IsDeleted || goal.UserId != _currentUser.UserId)
+            return null;
+
+        return MapToResponse(goal);
     }
 
     public async Task<IEnumerable<FinancialGoalResponse>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var goals = await _repository.GetAllAsync(cancellationToken);
+        var goals = await _repository.GetAllByUserAsync(_currentUser.UserId, cancellationToken);
         return goals.Select(MapToResponse);
     }
 
     public async Task<FinancialGoalResponse> CreateAsync(CreateFinancialGoalRequest request, CancellationToken cancellationToken = default)
     {
         var goal = new FinancialGoal(
+            _currentUser.UserId,
             request.Name,
             request.TargetAmount,
             request.Deadline,
@@ -108,7 +115,7 @@ public sealed class FinancialGoalService : IFinancialGoalService
     {
         var goal = await _repository.GetByIdAsync(id, cancellationToken);
 
-        if (goal is null || goal.IsDeleted)
+        if (goal is null || goal.IsDeleted || goal.UserId != _currentUser.UserId)
             throw new NotFoundException(nameof(FinancialGoal), id);
 
         return goal;

@@ -1,6 +1,8 @@
 using Planeja_.Application;
+using Planeja_.Application.Abstractions;
 using Planeja_.Infrastructure;
 using Planeja_.Web.Middleware;
+using Planeja_.Web.Services;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -10,13 +12,15 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
+ 
     builder.Host.UseSerilog((context, services, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
 
     var allowedOrigins = builder.Configuration
         .GetSection("Cors:AllowedOrigins")
         .Get<string[]>() ?? [];
+
+    builder.Services.AddScoped<ICurrentUserService, DevelopmentCurrentUserService>();
 
     builder.Services
         .AddApplication()
