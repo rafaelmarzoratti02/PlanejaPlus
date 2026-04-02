@@ -42,6 +42,7 @@ try
 
     var app = builder.Build();
 
+    app.UseMiddleware<SecurityHeadersMiddleware>();
     app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseSerilogRequestLogging();
 
