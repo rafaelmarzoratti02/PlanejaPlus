@@ -29,6 +29,7 @@ public static class DependencyInjection
             options.User.RequireUniqueEmail = true;
         })
         .AddRoles<IdentityRole<Guid>>()
+        .AddSignInManager<SignInManager<ApplicationUser>>()
         .AddEntityFrameworkStores<AuthDbContext>()
         .AddDefaultTokenProviders();
 
