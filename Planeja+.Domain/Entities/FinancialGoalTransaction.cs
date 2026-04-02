@@ -3,19 +3,17 @@ using Planeja_.Domain.Exceptions;
 
 namespace Planeja_.Domain.Entities;
 
-public class FinancialGoalTransaction
+public class FinancialGoalTransaction : EntityBase
 {
-    public Guid Id { get; private set; }
     public Guid FinancialGoalId { get; private set; }
     public decimal Amount { get; private set; }
     public TransactionType Type { get; private set; }
     public DateTime Date { get; private set; }
     public string? Description { get; private set; }
-    public bool IsDeleted { get; private set; }
-    public DateTime? DeletedAt { get; private set; }
-    public DateTime CreatedAt { get; private set; }
 
-    private FinancialGoalTransaction() { }
+    private FinancialGoalTransaction()
+    {
+    }
 
     public FinancialGoalTransaction(
         Guid financialGoalId,
@@ -28,14 +26,13 @@ public class FinancialGoalTransaction
         ValidateDate(date);
         ValidateType(type);
 
-        Id = Guid.NewGuid();
+        InitializeIdentity();
+
         FinancialGoalId = financialGoalId;
         Amount = amount;
         Type = type;
         Date = date;
         Description = description;
-        IsDeleted = false;
-        CreatedAt = DateTime.UtcNow;
     }
 
     public void Delete()
@@ -43,8 +40,7 @@ public class FinancialGoalTransaction
         if (IsDeleted)
             throw new DomainException("Transaction is already deleted.");
 
-        IsDeleted = true;
-        DeletedAt = DateTime.UtcNow;
+        ApplySoftDelete();
     }
 
     private static void ValidateAmount(decimal amount)

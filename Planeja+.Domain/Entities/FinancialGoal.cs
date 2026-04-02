@@ -3,21 +3,16 @@ using Planeja_.Domain.Exceptions;
 
 namespace Planeja_.Domain.Entities;
 
-public class FinancialGoal
+public class FinancialGoal : AuditableEntityBase
 {
     private readonly List<FinancialGoalTransaction> _transactions = new();
 
-    public Guid Id { get; private set; }
     public Guid UserId { get; private set; }
     public string Name { get; private set; } = default!;
     public decimal TargetAmount { get; private set; }
     public FinancialGoalStatus Status { get; private set; }
     public DateTime Deadline { get; private set; }
     public string? Description { get; private set; }
-    public bool IsDeleted { get; private set; }
-    public DateTime? DeletedAt { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    public DateTime? UpdatedAt { get; private set; }
 
     public IReadOnlyCollection<FinancialGoalTransaction> Transactions => _transactions.AsReadOnly();
 
@@ -25,7 +20,9 @@ public class FinancialGoal
         .Where(t => !t.IsDeleted)
         .Sum(t => t.Type == TransactionType.Deposit ? t.Amount : -t.Amount);
 
-    private FinancialGoal() { }
+    private FinancialGoal()
+    {
+    }
 
     public FinancialGoal(Guid userId, string name, decimal targetAmount, DateTime deadline, string? description = null)
     {
@@ -34,15 +31,14 @@ public class FinancialGoal
         ValidateTargetAmount(targetAmount);
         ValidateDeadline(deadline);
 
-        Id = Guid.NewGuid();
+        InitializeIdentity();
+
         UserId = userId;
         Name = name;
         TargetAmount = targetAmount;
         Status = FinancialGoalStatus.Active;
         Deadline = deadline;
         Description = description;
-        IsDeleted = false;
-        CreatedAt = DateTime.UtcNow;
     }
 
     public void Update(string name, decimal targetAmount, DateTime deadline, string? description = null)
@@ -56,7 +52,7 @@ public class FinancialGoal
         TargetAmount = targetAmount;
         Deadline = deadline;
         Description = description;
-        UpdatedAt = DateTime.UtcNow;
+        TouchUpdated();
     }
 
     public FinancialGoalTransaction AddTransaction(decimal amount, TransactionType type, DateTime date, string? description = null)
@@ -89,7 +85,7 @@ public class FinancialGoal
             throw new DomainException("Only active goals can be completed.");
 
         Status = FinancialGoalStatus.Completed;
-        UpdatedAt = DateTime.UtcNow;
+        TouchUpdated();
     }
 
     public void Cancel()
@@ -100,7 +96,7 @@ public class FinancialGoal
             throw new DomainException("Only active goals can be cancelled.");
 
         Status = FinancialGoalStatus.Cancelled;
-        UpdatedAt = DateTime.UtcNow;
+        TouchUpdated();
     }
 
     public void Delete()
@@ -108,8 +104,7 @@ public class FinancialGoal
         if (IsDeleted)
             throw new DomainException("Goal is already deleted.");
 
-        IsDeleted = true;
-        DeletedAt = DateTime.UtcNow;
+        ApplySoftDelete();
     }
 
     private void EnsureNotDeleted()
