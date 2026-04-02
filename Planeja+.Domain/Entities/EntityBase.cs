@@ -1,9 +1,5 @@
 namespace Planeja_.Domain.Entities;
 
-/// <summary>
-/// Shared identity, creation audit, and soft-delete state for domain entities.
-/// Business rules and invariants belong on concrete types, not here.
-/// </summary>
 public abstract class EntityBase
 {
     public Guid Id { get; protected set; }
