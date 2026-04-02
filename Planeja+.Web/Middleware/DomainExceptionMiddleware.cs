@@ -2,7 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Planeja_.Domain.Exceptions;
 
-namespace Planeja_.Middleware;
+namespace Planeja_.Web.Middleware;
 
 public sealed class DomainExceptionMiddleware
 {

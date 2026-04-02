@@ -3,7 +3,7 @@ using Planeja_.Application.DTOs.FinancialGoals;
 using Planeja_.Application.DTOs.Transactions;
 using Planeja_.Application.Services;
 
-namespace Planeja_.Controllers;
+namespace Planeja_.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
