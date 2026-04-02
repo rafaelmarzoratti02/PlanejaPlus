@@ -30,6 +30,10 @@ public sealed class ExceptionHandlingMiddleware
         {
             await WriteResponseAsync(context, HttpStatusCode.NotFound, ex.Message);
         }
+        catch (AuthException ex)
+        {
+            await WriteResponseAsync(context, HttpStatusCode.Unauthorized, ex.Message);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception occurred");

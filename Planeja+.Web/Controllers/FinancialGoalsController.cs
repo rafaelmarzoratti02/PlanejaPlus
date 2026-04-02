@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Planeja_.Application.DTOs.FinancialGoals;
 using Planeja_.Application.DTOs.Transactions;
@@ -7,6 +8,7 @@ namespace Planeja_.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class FinancialGoalsController : ControllerBase
 {
     private readonly IFinancialGoalService _service;
